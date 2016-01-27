@@ -1,0 +1,61 @@
+
+{% extends "students/base.html" %} 
+<!-- наследуем от базового шаблона -->
+{% load static from staticfiles %}
+<!-- загружаем тег для указания урла  для статичных ресурсов -->
+{% block meta_title %} Группы {% endblock meta_title %}
+
+{% block title %} Группа {% endblock title %}
+
+{% block content %}
+
+
+    <div class="add-student"><a class="btn btn-primary btn-md" href={% url 'groups_add' %} >Добавить группу</a></div>
+    
+{% if groups %}
+    <table class="table table-hover table-striped">
+    <thead>
+    <tr>
+    <th><a href="">№п/п</a></th>
+    <th><a href="">Название&uarr;</a></th>
+    <th><a href="#">Староста</a></th>
+    <th>Действия</th>
+    </tr>
+    </thead>
+    {% for group in groups %}
+    <tbody>
+      <tr>
+      <td>{{ forloop.counter }}</td>
+      <td><a title="Редактировать" href={% url 'groups_edit' group.id %}> {{ group.name }}</a></td>
+      <td><a title="Редактировать" href={% url 'students_edit' group.leader.id %}> {{group.leader.name }}</a></td>
+      <td>
+         <div class="dropdown">
+           <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">Действие
+           <span class="caret"></span></button>
+             <ul class="dropdown-menu" role="menu">
+                <li role="presentation"><a role="menuitem" tabindex="-1" href={% url 'groups_edit' group.id %}>Редактирование</a></li>
+                <li role="presentation"><a role="menuitem" tabindex="-1" href={% url 'groups_delete' group.id %}>Удаление</a></li>
+             </ul>
+          </div>
+      </td>
+      </tr>
+
+   {% endfor %}
+    
+   
+   
+   </tbody>
+ </table>
+ {% else %}
+ <p> нет групп</p>
+ {% endif %}
+
+ <nav>
+ <ul class="pagination">
+    <li><a href="#">1</a></li>
+    <li class="active"><a href="#">2</a></li>
+    <li><a href="#">Далее</a></li>
+</ul>
+</nav>
+ 
+{% endblock content %}

@@ -1,3 +1,4 @@
+# coding: utf-8
 """
 Django settings for studentsdb project.
 
@@ -37,7 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django.contrib.sites',
+    'django.contrib.sites', #если установлен этот пакет , то д.б. указано SITE_ID = 1, иначе ошибка
     'students'
 ]
 
@@ -121,3 +122,5 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
 
 STATIC_URL = '/static/'
+DEBUG = True
+SITE_ID = 1
