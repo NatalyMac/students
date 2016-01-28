@@ -58,7 +58,8 @@ ROOT_URLCONF = 'studentsdb.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'students/templates/'),],
+        # добавили адрес, где хранятся шаблоны, нужно для тега include
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -66,6 +67,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'django.core.context_processors.request',
+                'studentsdb.context_processors.students_proc',
             ],
         },
     },
@@ -124,3 +127,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 DEBUG = True
 SITE_ID = 1
+
+#PORTAL_URL = 'http://localhost:8000'
+# вычисляем эту переменную в процессоре контекста
+

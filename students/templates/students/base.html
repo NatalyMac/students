@@ -1,5 +1,8 @@
 {% load static from staticfiles %}
 <!-- загружаем тег для указания урла  для статичных ресурсов -->
+
+<!-- домашнее задание - сделать подсветки табов не используя фиксир url --> 
+
 <!DOCTYPE html>
 <html>
     
@@ -8,7 +11,7 @@
 <meta name="description" value="Система учета студентов ВУЗа"/>
 <meta charset="utf-8"/>
 <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
-<link rel="stylesheet" href= {% static "css/main.css" %}>
+<link rel="stylesheet" href= {{PORTAL_URL}}{% static "css/main.css" %}>
 {% block extra_css %}{% endblock extra_css %}
 
  
@@ -20,7 +23,15 @@
  <!-- в этом классе задаем строчку страницы, в которой будет заголовок-ссылка (лого текстовое), форма выбора студентов, строка поделена на колонки согласно грида - 8 колонок заголовок, 4 - форма выбора. Форма выбора сделана как горизонтальная, вопрос - такой вид формы требует указания размеров для лейбл и размера селекта, поигралась пришла к выводу, что размерчики этой формы надо рассматривать как полный грид, т.е. из размерности 12-->
     <!--лого-->
     <div class="col-md-8">
-      <h2> <a href="#">Сервис учета студентов</a></h2>
+      {% block logo %} <h2> <a href="#">Сервис учета студентов</a></h2> {% endblock logo%}
+
+      <p>URL of this page: {{ request.get_full_path }}</p>
+      <p>URL of this host: {{ request.get_host }}</p>
+      <p>PORTAL URL: {{ PORTAL_URL }}</p>
+    
+      <p> Absolute URL of this page: {{ request.build_absolute_uri}}</p>
+      
+
     </div>
     <!-- селектор групп-->
     <div class="col-md-4" id="group-selector">
@@ -46,12 +57,13 @@
    <div class="col-md-12"> 
      <nav>
        <ul class="nav nav-tabs" role="tablist">
-       <li role="presentation" class="active"> <a href={% url 'home' %}> Студенты </a></li> 
+       <li role="presentation" {% if request.path == '/' %} class="active" {% endif %}> <a href={% url 'home' %}> Студенты </a></li> 
        <!--если пользователь нажмет в меню Студенты, то адрес запроса будет / , это корень нашего сайта, в 
        urls этому соответствует адрес r'^$', вьюшка в views students_list
        адрес запроса - куда перейдем, если нажмем сюда-->
-       <li role="presentation"> <a href={% url "journal" %}> Посещения</a></li>
-       <li role="presentation"> <a href={% url "groups" %}> Группы </a></li>
+       
+       <li role="presentation" {% if 'journal' in request.path %} class="active" {% endif %}> <a href={% url "journal" %}> Посещения</a></li>
+       <li role="presentation" {% if 'groups' in request.path %} class="active" {% endif %}> <a href={% url "groups" %}> Группы </a></li>
       </ul>
       </nav>
    </div>
@@ -79,10 +91,11 @@
 <div class="row" id="foot">
 <div class="col-md-12">
 <footer class="well well-sm">
-  <p>&copy;Система учета студентов 2015</p>
+<p>&copy;Система учета студентов 2015 <span class="badge pull-right">{% block footer %} {% endblock footer %}</span></p>
 </footer>
 </div>
 </div><!--footer-->
+
 </div><!--container-->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>

@@ -4,8 +4,10 @@
 {% load static from staticfiles %}
 <!-- загружаем тег для указания урла  для статичных ресурсов -->
 {% block meta_title %} Группы {% endblock meta_title %}
-
+{% block logo %} <h2> <a href="#">Сервис учета студентов - Группы</a></h2> {% endblock logo%}
+<!--играемся - меняем лого из дочерних файлов-->
 {% block title %} Группа {% endblock title %}
+
 
 {% block content %}
 
@@ -27,7 +29,7 @@
       <tr>
       <td>{{ forloop.counter }}</td>
       <td><a title="Редактировать" href={% url 'groups_edit' group.id %}> {{ group.name }}</a></td>
-      <td><a title="Редактировать" href={% url 'students_edit' group.leader.id %}> {{group.leader.name }}</a></td>
+      <td><a title="Редактировать" href={% url 'students_edit' group.leader.id  %}> {{group.leader.name }}</a></td>
       <td>
          <div class="dropdown">
            <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">Действие
@@ -50,12 +52,10 @@
  <p> нет групп</p>
  {% endif %}
 
- <nav>
- <ul class="pagination">
-    <li><a href="#">1</a></li>
-    <li class="active"><a href="#">2</a></li>
-    <li><a href="#">Далее</a></li>
-</ul>
-</nav>
+ {% include 'students/pages.html' %}
+<!-- включаем файл с пагинатором pages.html-->
  
 {% endblock content %}
+
+{% block footer %} Группы {% endblock footer %}
+<!--играемся - добавляем в футер название страницы-->

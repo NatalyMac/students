@@ -5,12 +5,14 @@
 {% block meta_title %} Студенты {% endblock meta_title %}
 
 {% block title %} База Студентов {% endblock title %}
+{% block logo %} <h2> <a href="#">Сервис учета студентов - Студенты</a></h2> {% endblock logo%}
+<!--играемся - меняем лого из дочерних файлов-->
 
 {% block content %}
      
 <div class="add-student"><a class="btn btn-primary btn-md" href= {% url 'students_add' %}> Добавить студента</a>
 </div> <!-- кнопке прописали адрес запроса r'^students/add/$',  и вьюшку students_add, заменили 
-      явный адрес на "/students/add" на тег url с именем адреса из определения ф-и url  в файле urls-->
+      явный адрес  "/students/add" на тег url с именем адреса из определения ф-и url  в файле urls-->
   
     
     <!-- таблица-->
@@ -28,15 +30,16 @@
   <tbody>
     
     {% for student in students%}
-    <!-- объявили переменную student, смотрим в список students, полученный из вьюшки, пока список не закончился бегаем по списку и генерируем выходную таблицу-->
+    <!-- объявили переменную student, смотрим в список students, полученный из вьюшки (по сути из БД), пока список не закончился бегаем по списку и генерируем выходную таблицу-->
       <tr>
       <td> {{ forloop.counter }}</td>
       <td><img class="img-circle" width=30 height=30 src= {% static student.image %}></td>
-      <!-- заменили путь "img/keks.jpg"  на значение из списка-->
+      <!--  Источник изображения src = > тег static указывает на урл, где хранятся статические ресурсы проекта, посмотреть его значения можно в settings.py. В базе данных для каждого студентся хранится путь к файлу с фото - это student.img. Т.е. вместо статичного пути "img/keks.jpg" имеем выражение, которого вычислит нам путь изображения-->
 
       <td><a title="Редактировать" href= {% url 'students_edit' student.id %}>{{ student.last_name }}</a></td>
-      <!--"/students/1/edit"- страница редактирования текущего студента,  этот явный адрес заменили на урл тег плюс переменная идентификатор студента (переменная идф студента взяли из списка студентов student.id), имя студента также выводим в переменной из списка студентов, он передается в переменнную sid -->
-      <!--при щелчке на фамилию или имя открывается форма редактироваения конкретного текущего  студента, здесь прописали адрес запроса на редактирование этого студента r'^students/(?P<sid>\d+)/edit/$', и вьюшку students_edit-->
+      <!--При щелчке на фамилию или имя открывается форма редактироваения конкретного текущего  студента. Адрес запроса на редактирование этого студента описан в регулярном выражении r'^students/(?P<sid>\d+)/edit/$'. Пример адреса - "/students/1/edit". Тег урл формирует нам этот адрес из имени урла 'students_edit'  и идентификатора студента. 
+      Данный идентификатор передается в регулярное выражение и во вьшку как переменная sid-->
+      
       <td><a title="Редактировать" href={% url "students_edit" student.id %}> {{ student.first_name }} </a></td>
       <td> {{ student.ticket }} </td>
       <td>
@@ -48,8 +51,7 @@
                 <li role="presentation"><a role="menuitem" tabindex="-1" href= {% url "students_edit" student.id %}>Редактирование</a></li>
                 <!-- путь /students/1/edit/ записан в виде {% url "students_edit" student.id %}  где "students_edit" это name из url файла urls, student.id - данные полученные из переменной student из списка students-->
                 <li role="presentation"><a role="menuitem" tabindex="-1" href= {% url 'students_delete' student.id %}>Удаление</a></li>
-                <!-- пунктам выпад меню прописали адреса запросов и вьюшки
-                r'^journal/(?P<sid>\d+)/$', journal_student, r'^groups/(?P<gid>\d+)/edit/$',groups_edit, ?P<gid>\d+)/delete/$',groups_delete-->
+              
              </ul>
           </div>
       </td>
@@ -58,334 +60,14 @@
   </tbody>
   </table>
 
-  <nav>
- <ul class="pagination">
-    <li><a href="#">&laquo;</a></li>
-    <li><a href="#">1</a></li>
-    <li class="active"><a href="#">2</a></li>
-    <li><a href="#">3</a></li>
-    <li><a href="#">4</a></li>
-    <li><a href="#">5</a></li>
-    <li><a href="#">&raquo;</a></li>
-</ul>
+
+{% include 'students/pages.html' %}
+<!-- включаем файл с пагинатором pages.html-->
+
+ 
+
 {% endblock content %}
+{% block footer %} Студенты {% endblock footer %}
+<!--играемся - добавляем в футер название страницы-->
     
-    <!--<tr>
-      <td>2</td>
-      <td><img class="img-rounded" width=30 height=30 src= {% static "img/cat_acrobat.png" %}></td>
-      <td><a title="Редактировать" href="#">Володина</a></td>
-      <td><a title="Реактировать" href="#">Марина</a></td>
-      <td>45</td>
-      <td>
-         <div class="dropdown">
-           <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">Действие
-           <span class="caret"></span>
-           </button>
-             <ul class="dropdown-menu" role="menu">
-                <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Посещение</a></li>
-                <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Редактирование</a></li>
-                <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Удаление</a></li>
-             </ul>
-          </div>
-        </td>
-        </tr>
-
-     <tr>
-      <td>3</td>
-      <td><img class="img-rounded" width=30 height=30 src= {% static "img/cat_eyes.png" %}></td>
-      <td><a title="Редактировать" href="#">Мещанина</a></td>
-      <td><a title="Реактировать" href="#"> Татьяна</a></td>
-      <td>78</td>
-      <td>
-         <div class="dropdown">
-           <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">Действие
-           <span class="caret"></span>
-           </button>
-             <ul class="dropdown-menu" role="menu">
-                <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Посещение</a></li>
-                <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Редактирование</a></li>
-                <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Удаление</a></li>
-             </ul>
-          </div>
-        </td>
-        </tr>
-   </tbody>
- </table>
-
- <nav>
- <ul class="pagination">
-    <li><a href="#">&laquo;</a></li>
-    <li><a href="#">1</a></li>
-    <li class="active"><a href="#">2</a></li>
-    <li><a href="#">3</a></li>
-    <li><a href="#">4</a></li>
-    <li><a href="#">5</a></li>
-    <li><a href="#">&raquo;</a></li>
-</ul>
-</nav>
-
-  </div> 
-  <!--content-column-->
- </div> 
- <!--content-columns-->
-<!--</div> -->
-<!--div students-->
-<!--**********************************************************************-->
-<!--<div id="visits" class="tab-pane fade">
-<!--блок для посещения-->
-<!--<div class="row">
-    <div class="col-md-12">
-      <div class="title-content"><h3>Учет посещений</h3></div>
-    </div>
-    </div>
-<div>
-<div class="text-center">
-<ul class="pager">
-<li><a href="#"> <span class="glyphicon glyphicon-arrow-left month"></span></a></li>
-<li><span class="month">Январь</span></li>
-<li><a href="#"> <span class="glyphicon glyphicon-arrow-right month"></span></a></li>
-</ul>
-</div>
-<table class="table table-hover table-striped visit-table table-condensed">
-  <thead>
-  <tr>
-    <th>№ п/п</th>
-    <th>Студент</th>
-    <th>Ср 1</th>
-    <th>ЧТ 2</th>
-    <th>Пт 3</th>
-    <th>Сб 4</th>
-    <th>Вс 5</th>
-    <th>Пн 6</th>
-    <th>Вт 7</th>
-    <th>Ср 8</th>
-    <th>Чт 9</th>
-    <th>Пт 10</th>
-    <th>Сб 11</th>
-    <th>Вс 12</th>
-    <th>Пн 13</th>
-    <th>Вт 14</th>
-    <th>Ср 15</th>
-    <th>Чт 16</th>
-    <th>Пт 17</th>
-    <th>Сб 18</th>
-    <th>Вс 19</th>
-    <th>Пн 20</th>
-    <th>Вт 21</th>
-    <th>Ср 22</th>
-    <th>Чт 23</th>
-    <th>Пт 24</th>
-    <th>Сб 25</th>
-    <th>Вс 26</th>
-    <th>Пн 27</th>
-    <th>Вт 28</th>
-    <th>Ср 29</th>
-    <th>Чт 30</th>
-    <th>Пт 31</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-    <td>1</td>
-    <td><a href="">Куличик Наталья</a></td>
-    <td><input type="checkbox" value=""></td>
-    <td><input type="checkbox" value=""></td>
-    <td><input type="checkbox" value=""></td>
-    <td><input type="checkbox" value=""></td>
-    <td><input type="checkbox" value=""></td>
-    <td><input type="checkbox" value=""></td>
-    <td><input type="checkbox" value=""></td>
-    <td><input type="checkbox" value=""></td>
-    <td><input type="checkbox" value=""></td>
-    <td><input type="checkbox" value=""></td>
-    <td><input type="checkbox" value=""></td>
-    <td><input type="checkbox" value=""></td>
-    <td><input type="checkbox" value=""></td>
-    <td><input type="checkbox" value=""></td>
-    <td><input type="checkbox" value=""></td>
-    <td><input type="checkbox" value=""></td>
-    <td><input type="checkbox" value=""></td>
-    <td><input type="checkbox" value=""></td>
-    <td><input type="checkbox" value=""></td>
-    <td><input type="checkbox" value=""></td>
-    <td><input type="checkbox" value=""></td>
-    <td><input type="checkbox" value=""></td>
-    <td><input type="checkbox" value=""></td>
-    <td><input type="checkbox" value=""></td>
-    <td><input type="checkbox" value=""></td>
-    <td><input type="checkbox" value=""></td>
-    <td><input type="checkbox" value=""></td>
-    <td><input type="checkbox" value=""></td>
-    <td><input type="checkbox" value=""></td>
-    <td><input type="checkbox" value=""></td>
-    <td><input type="checkbox" value=""></td>
-</tr>  
-<tr>
-    <td>2</td>
-    <td><a href="">Володина Марина</a></td>
-    <td><input type="checkbox" value=""></td>
-    <td><input type="checkbox" value=""></td>
-    <td><input type="checkbox" value=""></td>
-    <td><input type="checkbox" value=""></td>
-    <td><input type="checkbox" value=""></td>
-    <td><input type="checkbox" value=""></td>
-    <td><input type="checkbox" value=""></td>
-    <td><input type="checkbox" value=""></td>
-    <td><input type="checkbox" value=""></td>
-    <td><input type="checkbox" value=""></td>
-    <td><input type="checkbox" value=""></td>
-    <td><input type="checkbox" value=""></td>
-    <td><input type="checkbox" value=""></td>
-    <td><input type="checkbox" value=""></td>
-    <td><input type="checkbox" value=""></td>
-    <td><input type="checkbox" value=""></td>
-    <td><input type="checkbox" value=""></td>
-    <td><input type="checkbox" value=""></td>
-    <td><input type="checkbox" value=""></td>
-    <td><input type="checkbox" value=""></td>
-    <td><input type="checkbox" value=""></td>
-    <td><input type="checkbox" value=""></td>
-    <td><input type="checkbox" value=""></td>
-    <td><input type="checkbox" value=""></td>
-    <td><input type="checkbox" value=""></td>
-    <td><input type="checkbox" value=""></td>
-    <td><input type="checkbox" value=""></td>
-    <td><input type="checkbox" value=""></td>
-    <td><input type="checkbox" value=""></td>
-    <td><input type="checkbox" value=""></td>
-    <td><input type="checkbox" value=""></td>
-</tr>    
-<tr>
-    <td>3</td>
-    <td><a href="">Мещанина Татьяна</a></td>
-    <td><input type="checkbox" value=""></td>
-    <td><input type="checkbox" value=""></td>
-    <td><input type="checkbox" value=""></td>
-    <td><input type="checkbox" value=""></td>
-    <td><input type="checkbox" value=""></td>
-    <td><input type="checkbox" value=""></td>
-    <td><input type="checkbox" value=""></td>
-    <td><input type="checkbox" value=""></td>
-    <td><input type="checkbox" value=""></td>
-    <td><input type="checkbox" value=""></td>
-    <td><input type="checkbox" value=""></td>
-    <td><input type="checkbox" value=""></td>
-    <td><input type="checkbox" value=""></td>
-    <td><input type="checkbox" value=""></td>
-    <td><input type="checkbox" value=""></td>
-    <td><input type="checkbox" value=""></td>
-    <td><input type="checkbox" value=""></td>
-    <td><input type="checkbox" value=""></td>
-    <td><input type="checkbox" value=""></td>
-    <td><input type="checkbox" value=""></td>
-    <td><input type="checkbox" value=""></td>
-    <td><input type="checkbox" value=""></td>
-    <td><input type="checkbox" value=""></td>
-    <td><input type="checkbox" value=""></td>
-    <td><input type="checkbox" value=""></td>
-    <td><input type="checkbox" value=""></td>
-    <td><input type="checkbox" value=""></td>
-    <td><input type="checkbox" value=""></td>
-    <td><input type="checkbox" value=""></td>
-    <td><input type="checkbox" value=""></td>
-    <td><input type="checkbox" value=""></td>
-</tr>  
-</tbody>
-</table>
-</div>
-</div> <!<div id="visits" -->
-<!--*************************************************************************-->
-<!-- Блок отображающий содержание страницы для меню Группы-->
-  <!--<div id="groups" class="tab-pane fade">
-    <div class="row">
-    <div class="col-md-12">
-      <div class="title-content"> <h3> Группа</h3></div>
-      <div class="add-student"><a class="btn btn-primary btn-md" href="#">Добавить группу</a></div>
-    </div>
-    </div>
-<!Таблица с перечнем групп-->
-    <!--<table class="table table-hover table-striped">
-    <thead>
-    <tr>
-    <th><a href="">№п/п</a></th>
-    <th><a href="">Название&uarr;</a></th>
-    <th><a href="#">Староста</a></th>
-    <th>Действия</th>
-    </tr>
-    </thead>
-    <tbody>
-      <tr>
-      <td>1</td>
-      <td><a title="Редактировать" href="#">М21-2</a></td>
-      <td><a title="Редактировать" href="#">Никотин В.</a></td>
-      <td>
-         <div class="dropdown">
-           <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">Действие
-           <span class="caret"></span></button>
-             <ul class="dropdown-menu" role="menu">
-                <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Посещение</a></li>
-                <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Редактирование</a></li>
-                <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Удаление</a></li>
-             </ul>
-          </div>
-      </td>
-      </tr>
-      <tr>
-      <td>2</td>
-      <td><a title="Редактировать" href="#">М21-2</a></td>
-      <td><a title="Реактировать" href="#">Иванов С.</a></td>
-      <td>
-         <div class="dropdown">
-           <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">Действие
-           <span class="caret"></span>
-           </button>
-             <ul class="dropdown-menu" role="menu">
-                <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Посещение</a></li>
-                <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Редактирование</a></li>
-                <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Удаление</a></li>
-             </ul>
-          </div>
-        </td>
-        </tr>
-      <tr>
-      <td>3</td>
-      <td><a title="Редактировать" href="#">М21-3</a></td>
-      <td><a title="Реактировать" href="#">Сергеев А.</a></td>
-      <td>
-         <div class="dropdown">
-           <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">Действие
-           <span class="caret"></span>
-           </button>
-             <ul class="dropdown-menu" role="menu">
-                <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Посещение</a></li>
-                <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Редактирование</a></li>
-                <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Удаление</a></li>
-             </ul>
-          </div>
-        </td>
-        </tr>
-   </tbody>
- </table>
- <nav>
- <ul class="pagination">
-    <li><a href="#">1</a></li>
-    <li class="active"><a href="#">2</a></li>
-    <li><a href="#">Далее</a></li>
-</ul>
-</nav>
-</div> <!<div id="groups"-->
-<!--**************************************************************************-->
-<!--</div> <tab content-->
-<!--футер-->
-<!--<div class="row" id="foot">
-<div class="col-md-12">
-<footer class="well well-sm">
-  <p>&copy;Система учета студентов 2015</p>
-</footer>
-</div>
-</div><!--footer-->
-<!--</div><!--container-->
-<!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-</body>
-</html>
+    

@@ -17,12 +17,15 @@ Including another URLconf
 """
 from django.conf.urls import patterns, include, url
 from django.contrib import admin #все запросы по адресу admin/ обрабатываются этим модулем
-from students.views import students_list, students_list, students_add, students_edit, students_delete, \
-     groups_list, groups_add,groups_edit, groups_delete, journal_list, journal_student, journal_update
+from students.views.students import students_list, students_list, students_add, students_edit, students_delete 
+from students.views.groups import groups_list, groups_add,groups_edit, groups_delete
+from students.views.journal import journal_list, journal_student, journal_update
 #from students import views
 urlpatterns = [
 	#students url
 	url(r'^$', students_list, name='home'),
+    # при проверке url-паттерна 'имя домена/' не входит в проверку, поэтому все регулярные выраж. для урлов не содержат имя домена/
+    # поэтому urlпаттерн = ^$ - пустая строка, соответствует запросам в корневой адрес www.имя домена/
     url(r'^students/add/$', students_add, name='students_add'),
     url(r'^students/(?P<sid>\d+)/edit/$',students_edit, name='students_edit'), #sid идентификатор студента
     url(r'^students/(?P<sid>\d+)/delete/$',students_delete, name='students_delete'),
@@ -37,11 +40,10 @@ urlpatterns = [
     url(r'^journal/$', journal_list, name='journal'),
     url(r'^journal/(?P<sid>\d+)/$', journal_student, name='journal_student'),
     url(r'^journal/update/$', journal_update, name='journal_update'),
+    
     # админ панель 
     url(r'^admin/', include(admin.site.urls)),
     
-# при проверке url-паттерна имя домена/ не входит в проверку, поэтому все регулярные выраж. для урлов не содержат имя домена/
-# поэтому urlпаттерн = ^$ - пустая строка, соответствует запросам в корневой адрес www.имя домена/
 ]
 
 """urlpatterns = [

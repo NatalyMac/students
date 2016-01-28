@@ -25,7 +25,7 @@ def students_list(request):
         'ticket': 2345,
         'image': 'img/cat_eyes.png'},
     )
-    # добавили переменную list_students = кортежу из трех элементов, каждый элемент кортежа словарь 
+    # добавили переменную list_students = кортежу из трех элементов, каждый элемент кортежа словарь, имитация бд
 
     return render(request,'students/students_list.html', {'students': list_students})
     # добавили третий аргумент - словарь с ключом  list_students = списку студентов, по этому ключу получаем доступ 
@@ -45,41 +45,3 @@ def students_delete(request, sid):
 # который нам его ловит и передает во вьюшку
 # в 21 строке используется %s - оператор форматирования, который перем sid приводит к строковому типу, 
 # чтобы сформировать заголовок страницы с содержанием id студента
-
-#вьюшки для групп
-def groups_list(request):
-
-    list_groups = (
-        {'id': 1,
-        'name': u'M21-2',
-        'leader': {'id': 1, 'name': u'Куличик'}},
-        {'id': 2,
-        'name': u'M21-3',
-        'leader': {'id': 2, 'name': u'Иванов'}},
-        {'id': 3,
-        'name': u'M21-1',
-        'leader': {'id': 3, 'name': u'Петров'}},
-    )
-# моделируем наличие базы данных
-
-    return render(request,'students/groups_list.html', {'groups': list_groups})
-
-def groups_add(request):
-	return HttpResponse('<h1>Group Add Form</h1>')
-
-def groups_edit(request, gid):
-	return HttpResponse('<h1>Edit Group %s</h1>' % gid)
-
-def groups_delete(request, gid):
-	return HttpResponse('<h1>Delete Group %s</h1>' % gid)
-
-#вьюшки для журналов
-def journal_list(request):
-	return render(request, 'students/journal_list.html')
-
-def journal_student(request, sid):
-	return HttpResponse('<h1>students journal %s</h1>' % sid)
-
-def journal_update(request):
-	return HttpResponse('<h1> udate journal </h1>')
-
