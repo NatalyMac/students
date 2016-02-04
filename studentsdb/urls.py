@@ -20,6 +20,8 @@ from django.contrib import admin #все запросы по адресу admin/
 from students.views.students import students_list, students_list, students_add, students_edit, students_delete 
 from students.views.groups import groups_list, groups_add,groups_edit, groups_delete
 from students.views.journal import journal_list, journal_student, journal_update
+from students.views.exams import exam_list
+from .settings import MEDIA_ROOT, DEBUG
 #from students import views
 urlpatterns = [
 	#students url
@@ -41,10 +43,26 @@ urlpatterns = [
     url(r'^journal/(?P<sid>\d+)/$', journal_student, name='journal_student'),
     url(r'^journal/update/$', journal_update, name='journal_update'),
     
+    url(r'^exam/$', exam_list, name='exam'),
+
     # админ панель 
     url(r'^admin/', include(admin.site.urls)),
-    
+
+    #url(r'^media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': MEDIA_ROOT}),
+
 ]
+#from .settings import MEDIA_ROOT, DEBUG
+if DEBUG:
+# serve files from media folder этот урл паттерн подключаем только в режиме отладки, 
+# на боевом сервере обслуживание медиафалов выполняется напрямую сервером
+    urlpatterns += [
+        url(r'^media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': MEDIA_ROOT}),
+        # наши медиафайлы обрабатывает serve из пакета джанго (обработчик статич ресурсов, имя файля в перем path
+        # путь к папке  'document_root': MEDIA_ROOT, где MEDIA_ROOT из settings.py
+        # чтоб все это работало поле БД для изображ должно хранить имя файла изображения, иначе исключ 
+]
+
+#http://localhost:8000/static/
 
 """urlpatterns = [
     url(r'^admin/', admin.site.urls),

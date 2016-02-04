@@ -10,7 +10,8 @@
 <title>Система учета студентов {% block meta_title %}{% endblock meta_title %}</title>
 <meta name="description" value="Система учета студентов ВУЗа"/>
 <meta charset="utf-8"/>
-<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+<!-- <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">-->
+<link rel="stylesheet" href= {{PORTAL_URL}}{% static "bootstrap/css/bootstrap.min.css" %}>
 <link rel="stylesheet" href= {{PORTAL_URL}}{% static "css/main.css" %}>
 {% block extra_css %}{% endblock extra_css %}
 
@@ -25,11 +26,13 @@
     <div class="col-md-8">
       {% block logo %} <h2> <a href="#">Сервис учета студентов</a></h2> {% endblock logo%}
 
-      <p>URL of this page: {{ request.get_full_path }}</p>
+      <p>URL full path of this page: {{ request.get_full_path }}</p>
       <p>URL of this host: {{ request.get_host }}</p>
       <p>PORTAL URL: {{ PORTAL_URL }}</p>
-    
+      <p>URL of this page: {{ request.path }}</p>
+      <p>
       <p> Absolute URL of this page: {{ request.build_absolute_uri}}</p>
+
       
 
     </div>
@@ -55,15 +58,22 @@
  
   <div class="row" id="sub-header">
    <div class="col-md-12"> 
+       {% url 'groups' as groups_l %} 
+       {% url 'journal' as journal_l %}
+       {% url 'exam' as exam_l %}
      <nav>
        <ul class="nav nav-tabs" role="tablist">
-       <li role="presentation" {% if request.path == '/' %} class="active" {% endif %}> <a href={% url 'home' %}> Студенты </a></li> 
+        
+       <li role="presentation" class= {% block active_home %}{% endblock active_home %}> <a href={% url 'home' %}> Студенты </a></li> 
+       <!-- пробуем разные варианты подсветки активной закладки было {% if request.path == '/' %} class="active" {% endif %}, пробуем используя наследование и теги блоков -->
+       
        <!--если пользователь нажмет в меню Студенты, то адрес запроса будет / , это корень нашего сайта, в 
        urls этому соответствует адрес r'^$', вьюшка в views students_list
        адрес запроса - куда перейдем, если нажмем сюда-->
        
-       <li role="presentation" {% if 'journal' in request.path %} class="active" {% endif %}> <a href={% url "journal" %}> Посещения</a></li>
-       <li role="presentation" {% if 'groups' in request.path %} class="active" {% endif %}> <a href={% url "groups" %}> Группы </a></li>
+       <li role="presentation" {% if journal_l in request.path %} class="active" {% endif %}> <a href={% url "journal" %}> Посещения</a></li>
+       <li role="presentation" {% if groups_l in request.path %} class="active" {% endif %}> <a href={% url "groups" %}> Группы </a></li>
+       <li role="presentation" {% if exam_l in request.path %} class="active" {% endif %}> <a href={% url "exam" %}> Экзамены</a></li>
       </ul>
       </nav>
    </div>
@@ -99,6 +109,8 @@
 </div><!--container-->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+<!--<script src={{PORTAL_URL}}{% static "bootstrap/js/bootstrap.min.js" %}> -->
+
 {% block extra_js %}{% endblock extra_js %}
 </body>
 </html>

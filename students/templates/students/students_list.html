@@ -7,9 +7,12 @@
 {% block title %} База Студентов {% endblock title %}
 {% block logo %} <h2> <a href="#">Сервис учета студентов - Студенты</a></h2> {% endblock logo%}
 <!--играемся - меняем лого из дочерних файлов-->
-
+{% block active_home %} active{% endblock active_home %}
+<!-- для активной закладки устанавливаем class=active-- >
 {% block content %}
-     
+{{order_by_1}}
+{{reverse_1}}
+{{page}}
 <div class="add-student"><a class="btn btn-primary btn-md" href= {% url 'students_add' %}> Добавить студента</a>
 </div> <!-- кнопке прописали адрес запроса r'^students/add/$',  и вьюшку students_add, заменили 
       явный адрес  "/students/add" на тег url с именем адреса из определения ф-и url  в файле urls-->
@@ -17,24 +20,58 @@
     
     <!-- таблица-->
   <table class="table table-hover table-striped">
+  {% with order_by=request.GET.order_by reverse=request.GET.reverse page=request.GET.page %}
+  {{page}}
+  {{order_by}}
+  <!-- вводим переменные order_by и reverse, чтобы не набирать каждый раз длинные строки-->
   <thead>
     <tr>
     <th><a href="">№п/п</a></th>
     <th>Фото</th>
-    <th><a href="">Фамилия&uarr;</a></th>
-    <th><a href="#">Имя</a></th>
-    <th><a href="#">№ билета</a></th>
+    <th><a href={%url "home"%}?order_by=last_name{% if order_by_1 == 'last_name' or order_by == 'last_name' %}{% if reverse_1 != '1' and reverse != '1' %}&amp;reverse=1{% endif %}{% endif%}&amp;page={{page}}>
+
+        <!-- формируем запрос на отображение в сортировке урл плюс параметры для сортировки - поле и направление
+        если сортировка по полю установлена, то проверяем направление, если по возраст, устанавливаем реверс в 1, 
+        если уже реверс 1, то запрос на сортировку по возраст 
+        нужно уточнить - каждый раз при щелчке по ссылке вычисляется заново урл для сортир по возрастанию
+        !!!!! добавили номер страницы, а то сортировка приводит всегда на первую, не учитывая положения на текущей -->   
+          
+          Фамилия {% if order_by == 'last_name' or order_by_1 == 'last_name' %}
+                  {% if reverse != '1' and reverse_1 != '1' %}&uarr; 
+                  {% elif order_by == 'last_name' and reverse == '1' %}&darr;
+                  {% endif %}
+                  {% endif %}
+                <!-- в этом блоке рисуем стрелочки вверх и вниз в зависимости от установленного порядка сортировки и начальных значений order_by_1, reverse_1 - это значения из вьюшки - первоначальные установки сортировки-->
+        </a></th> 
+    <th><a href={% url "home" %}?order_by=first_name{% if order_by == 'first_name' and reverse != '1' %}&amp;reverse=1{% endif%}&amp;page={{page}}>
+          Имя {% if order_by == 'first_name' and reverse != '1' %}&uarr; 
+              {% elif order_by == 'first_name' and reverse == '1' %}&darr;
+              {% endif %}
+        </a></th>
+    <th><a href={% url "home" %}?order_by=ticket{% if order_by == 'ticket' and reverse != '1' %}&amp;reverse=1{% endif %}&amp;page={{page}}>
+          № билета {% if order_by == 'ticket' and reverse != '1' %}&uarr; 
+                   {% elif order_by == 'ticket' and reverse == '1' %}&darr;
+                   {% endif %}
+        </a></th>
     <th>Действия</th>
     </tr>
+
   </thead>
+  {% endwith %}
   <tbody>
     
-    {% for student in students%}
+    {% for student in students %}
     <!-- объявили переменную student, смотрим в список students, полученный из вьюшки (по сути из БД), пока список не закончился бегаем по списку и генерируем выходную таблицу-->
       <tr>
       <td> {{ forloop.counter }}</td>
-      <td><img class="img-circle" width=30 height=30 src= {% static student.image %}></td>
-      <!--  Источник изображения src = > тег static указывает на урл, где хранятся статические ресурсы проекта, посмотреть его значения можно в settings.py. В базе данных для каждого студентся хранится путь к файлу с фото - это student.img. Т.е. вместо статичного пути "img/keks.jpg" имеем выражение, которого вычислит нам путь изображения-->
+      <td>
+       {% if student.photo %}
+          <img class="img-circle" width=40 height=40 src= {{ student.photo.url }} ></td>
+          <!--  Источник изображения src = > тег static указывает на урл, где хранятся статические ресурсы проекта, посмотреть его значения можно в settings.py. В базе данных для каждого студентся хранится путь к файлу с фото - это student.img. Т.е. вместо статичного пути "img/keks.jpg" имеем выражение, которого вычислит нам путь изображения-->
+        {% else %}
+            <img class="img-circle" src= {% static 'img/cat.png' %} height=40 width=40 />
+        {% endif %}
+
 
       <td><a title="Редактировать" href= {% url 'students_edit' student.id %}>{{ student.last_name }}</a></td>
       <!--При щелчке на фамилию или имя открывается форма редактироваения конкретного текущего  студента. Адрес запроса на редактирование этого студента описан в регулярном выражении r'^students/(?P<sid>\d+)/edit/$'. Пример адреса - "/students/1/edit". Тег урл формирует нам этот адрес из имени урла 'students_edit'  и идентификатора студента. 

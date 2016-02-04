@@ -1,21 +1,21 @@
 <!-- ничего наследовать не нужно наверное ;) -->
 {% load static from staticfiles %}
 <!-- загружаем тег для указания урла  для статичных ресурсов -->
-{% if students.has_other_pages %}
+{% if groups.has_other_pages %}
 <!-- показываем пагинатор только если есть страницы для отображения -->
 {% with order_by=request.GET.order_by reverse=request.GET.reverse %}
 <!-- завели переменные для сортировки -->
 <nav>
  <ul class="pagination">
-    <li><a href="{% url "home" %}?page=1&amp;order_by={{ order_by }}&amp;reverse={{ reverse }}">&laquo;</a></li>
+    <li><a href="{% url "groups" %}?page=1&amp;order_by={{ order_by }}&amp;reverse={{ reverse }}">&laquo;</a></li>
     <!-- первый пункт пагинатора  
     формируем список страниц пагинатора и для каждого пункта урл линка, при этом сохраняя данные о сортировке
     те.е при выводе страницы мы помним какая сортировка была выбрана пользователем, а помним мы их из GET-->
-    {% for p in students.paginator.page_range %}
+    {% for p in groups.paginator.page_range %}
     <!-- по количеству страниц в page_range создаем пункты пагинатора, p номер страницы -->
-       <li {% if students.number == p %}class="active"{% endif %}><a href="{% url "home" %}?page={{ p }}&amp;order_by={{ order_by }}&amp;reverse={{ reverse }}">{{ p }}</a></li>
+       <li {% if groups.number == p %}class="active"{% endif %}><a href="{% url "groups" %}?page={{ p }}&amp;order_by={{ order_by }}&amp;reverse={{ reverse }}">{{ p }}</a></li>
     {% endfor %}
-    <li><a href="{% url "home" %}?page={{students.paginator.num_pages}}&amp;order_by={{ order_by }}&amp;reverse={{ reverse }}">&raquo;</a></li>
+    <li><a href="{% url "groups" %}?page={{ groups.paginator.num_pages}}&amp;order_by={{ order_by }}&amp;reverse={{ reverse }}">&raquo;</a></li>
     <!-- последний пункт пагинатора --> 
 </ul>
 </nav>
