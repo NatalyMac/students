@@ -5,33 +5,34 @@
 {% block meta_title %} Студенты {% endblock meta_title %}
 
 {% block title %} База Студентов {% endblock title %}
-{% block logo %} <h2> <a href="#">Сервис учета студентов - Студенты</a></h2> {% endblock logo%}
+
 <!--играемся - меняем лого из дочерних файлов-->
-{% block active_home %} active{% endblock active_home %}
-<!-- для активной закладки устанавливаем class=active-- >
+{% block logo %} <h2> <a href="#">Сервис учета студентов - Студенты</a></h2> {% endblock logo%}
+
+<!-- подстветка закладки, если она активна  class='active'-->
+{% block active_home %}active{% endblock active_home %}
+
+
 {% block content %}
-{{order_by_1}}
-{{reverse_1}}
-{{page}}
+
 <div class="add-student"><a class="btn btn-primary btn-md" href= {% url 'students_add' %}> Добавить студента</a>
-</div> <!-- кнопке прописали адрес запроса r'^students/add/$',  и вьюшку students_add, заменили 
-      явный адрес  "/students/add" на тег url с именем адреса из определения ф-и url  в файле urls-->
+</div> 
+<!-- кнопке прописали адрес запроса r'^students/add/$' -  тег url с именем адреса из файла урлов,
+в файле урлов этому адресу соответсвует вьюшка students_add-->
   
-    
-    <!-- таблица-->
+  <!-- таблица студентов-->
   <table class="table table-hover table-striped">
+  
   {% with order_by=request.GET.order_by reverse=request.GET.reverse page=request.GET.page %}
-  {{page}}
-  {{order_by}}
   <!-- вводим переменные order_by и reverse, чтобы не набирать каждый раз длинные строки-->
+  
   <thead>
     <tr>
     <th><a href="">№п/п</a></th>
     <th>Фото</th>
     <th><a href={%url "home"%}?order_by=last_name{% if order_by_1 == 'last_name' or order_by == 'last_name' %}{% if reverse_1 != '1' and reverse != '1' %}&amp;reverse=1{% endif %}{% endif%}&amp;page={{page}}>
-
-        <!-- формируем запрос на отображение в сортировке урл плюс параметры для сортировки - поле и направление
-        если сортировка по полю установлена, то проверяем направление, если по возраст, устанавливаем реверс в 1, 
+        <!-- формируем запрос на отображение в сортировке = урл плюс параметры для сортровки - поле и направление.
+        Если сортировка по полю установлена, то проверяем направление, если по возраст, устанавливаем реверс в 1, 
         если уже реверс 1, то запрос на сортировку по возраст 
         нужно уточнить - каждый раз при щелчке по ссылке вычисляется заново урл для сортир по возрастанию
         !!!!! добавили номер страницы, а то сортировка приводит всегда на первую, не учитывая положения на текущей -->   
@@ -55,21 +56,26 @@
         </a></th>
     <th>Действия</th>
     </tr>
-
   </thead>
+  
   {% endwith %}
+  
   <tbody>
     
     {% for student in students %}
     <!-- объявили переменную student, смотрим в список students, полученный из вьюшки (по сути из БД), пока список не закончился бегаем по списку и генерируем выходную таблицу-->
+      
       <tr>
       <td> {{ forloop.counter }}</td>
+      <!-- выводим номер по порядку -->
+
       <td>
        {% if student.photo %}
           <img class="img-circle" width=40 height=40 src= {{ student.photo.url }} ></td>
           <!--  Источник изображения src = > тег static указывает на урл, где хранятся статические ресурсы проекта, посмотреть его значения можно в settings.py. В базе данных для каждого студентся хранится путь к файлу с фото - это student.img. Т.е. вместо статичного пути "img/keks.jpg" имеем выражение, которого вычислит нам путь изображения-->
         {% else %}
             <img class="img-circle" src= {% static 'img/cat.png' %} height=40 width=40 />
+            <!-- изображение по умолчанию -->
         {% endif %}
 
 
@@ -78,7 +84,9 @@
       Данный идентификатор передается в регулярное выражение и во вьшку как переменная sid-->
       
       <td><a title="Редактировать" href={% url "students_edit" student.id %}> {{ student.first_name }} </a></td>
+      
       <td> {{ student.ticket }} </td>
+      
       <td>
          <div class="dropdown">
            <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">Действие
@@ -88,22 +96,24 @@
                 <li role="presentation"><a role="menuitem" tabindex="-1" href= {% url "students_edit" student.id %}>Редактирование</a></li>
                 <!-- путь /students/1/edit/ записан в виде {% url "students_edit" student.id %}  где "students_edit" это name из url файла urls, student.id - данные полученные из переменной student из списка students-->
                 <li role="presentation"><a role="menuitem" tabindex="-1" href= {% url 'students_delete' student.id %}>Удаление</a></li>
-              
              </ul>
           </div>
       </td>
+      
       </tr>
+    
     {% endfor %}
+ 
   </tbody>
+  
   </table>
 
 
 {% include 'students/pages.html' %}
 <!-- включаем файл с пагинатором pages.html-->
 
- 
-
 {% endblock content %}
+
 {% block footer %} Студенты {% endblock footer %}
 <!--играемся - добавляем в футер название страницы-->
     

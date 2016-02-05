@@ -115,7 +115,8 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/1.9/topics/i18n/
 
-LANGUAGE_CODE = 'ru'
+LANGUAGE_CODE = 'en-ua'
+# было значение ru - данные из формы в бд не передавались - ишибка валидации
 
 TIME_ZONE = 'UTC'
 
