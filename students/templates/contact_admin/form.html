@@ -1,0 +1,68 @@
+{% extends "students/base.html" %} 
+<!-- наследуем от базового шаблона -->
+
+{% load crispy_forms_tags %}
+<!-- загружаем пакет для стилизации автоформ -->
+
+{% load static from staticfiles %}
+<!-- загружаем тег для указания урла  для статичных ресурсов -->
+
+{% block meta_title %} Форма контакта {% endblock meta_title %}
+
+{% block status_message %}
+<!-- выводим статусное сообщение об ошибке, перекрывая этот блок в базовом шаблоне -->
+  
+        {%comment %}
+            закомментировали, потому что можно избежать дублирования этого кода, у нас в base.html такой же кусок кода
+            вместо этого куска вставляем block.super и он из base.html из блока status_message выдернет код
+            super - указывает на родительский элемент. Т.е. блок status_message из родит. html
+            {% if messages %}
+                {% for message in messages %}
+                <div class="alert alert-{{message.tags}} marg-alert" role="alert"> {{message}} </div>
+                {% endfor %}
+            {% endif %}
+        {%endcomment %}
+
+{{ block.super }}
+  {% if form.errors %}
+    {% сообщение о неправильно введенных данных не смогла передать из вьюшки contact_admin.py, почему не поняла - сообщения об успехе работает, а это нет %}
+     <div class="alert alert-danger marg-alert" role="alert">
+     Пожалуйста, исправьте следующие ошибки
+     </div>
+  {% endif %}
+{% endblock status_message %}
+
+{% block title %} Написать администратору {% endblock title %}
+
+{% block logo %} <h2> <a href="#">Сервис учета студентов - Форма контакта </a></h2> {% endblock logo%}
+<!--играемся - меняем лого из дочерних файлов-->
+
+{% block content %}
+
+<div class="row">
+<div class="col-md-12">
+
+{% crispy form %}
+
+</div>
+</div>
+
+{% endblock content %}
+
+{% block footer %} Форма контакта {% endblock footer %}
+
+{% comment%}
+Вариант до стилизации с помощью Crispy
+<div class="row">
+<div class="col-md-12">
+<form action="{% url "contact_admin" %}" method="POST">
+<!--в action указываем урл который обрабатывает форму-->
+    
+    {% csrf_token %}
+    {{ form.as_p}}
+    
+    <input type="submit" value="Submit" />
+</form>
+</div>
+</div>
+{%endcomment%}

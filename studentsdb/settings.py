@@ -39,7 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sites', #если установлен этот пакет , то д.б. указано SITE_ID = 1, иначе ошибка
-    'students'
+    'students',
+    'crispy_forms',
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -115,8 +116,8 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/1.9/topics/i18n/
 
-LANGUAGE_CODE = 'en-ua'
-# было значение ru - данные из формы в бд не передавались - ишибка валидации
+LANGUAGE_CODE = 'ru'
+#en-ua
 
 TIME_ZONE = 'UTC'
 
@@ -134,6 +135,18 @@ STATIC_URL = '/static/'
 DEBUG = True
 SITE_ID = 1
 
+# email settings
+# please, set here you smtp server details and your admin email
+ADMIN_EMAIL = 'NatalyDjango@gmail.com'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = '465'
+EMAIL_HOST_USER = 'NatalyDjango@gmail.com'
+EMAIL_HOST_PASSWORD = 'DjangoDjango'
+EMAIL_USE_TLS = False
+EMAIL_USE_SSL = True
+
+
+CRISPY_TEMPLATE_PACK = 'bootstrap3'
 #PORTAL_URL = 'http://localhost:8000'
 # вычисляем эту переменную в процессоре контекста
 

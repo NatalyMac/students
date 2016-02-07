@@ -6,7 +6,7 @@
 <title>Система учета студентов {% block meta_title %}{% endblock meta_title %}</title>
 <meta name="description" value="Система учета студентов ВУЗа"/>
 <meta charset="utf-8"/>
-<!-- <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">-->
+<!--<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">-->
 <link rel="stylesheet" href= {{PORTAL_URL}}{% static "bootstrap/css/bootstrap.min.css" %}>
 <link rel="stylesheet" href= {{PORTAL_URL}}{% static "css/main.css" %}>
 {% block extra_css %}{% endblock extra_css %}
@@ -26,10 +26,10 @@
       <p>PORTAL URL: {{ PORTAL_URL }}</p>
       <p>URL of this page path: {{ request.path }}</p>
       <p>Absolute URI of this page: {{ request.build_absolute_uri}}</p>
-<p> Method {{request.method}}</p>
-<p> GET Dict{{request.GET}}</p>
-<p> Post Dict{{request.POST}}</p>
-<p> session {{request.session.keys}}</p>
+      <p> Method {{request.method}}</p>
+      <p> GET Dict{{request.GET}}</p>
+      <p> Post Dict{{request.POST}}</p>
+      <p> session {{request.session.keys}}</p>
 
     </div>
     
@@ -57,6 +57,7 @@
        {% url 'groups' as groups_l %} 
        {% url 'journal' as journal_l %}
        {% url 'exam' as exam_l %}
+       {% url 'contact_admin' as contact_admin_l %}
        <!-- динамическая подстветка закладок меню, на которой фокус - та активна. Для этого нужно знать на какой закладке 
        это известно через тег url, напрямую в теге сравнения использовать нельзя, поэтому сначала вводим переменные в шаблон со значением url (имя из файла урлов) -->
      <nav>
@@ -69,16 +70,26 @@
        <li role="presentation" {% if journal_l in request.path %} class="active" {% endif %}> <a href={% url "journal" %}> Посещения</a></li>
        <li role="presentation" {% if groups_l in request.path %} class="active" {% endif %}> <a href={% url "groups" %}> Группы </a></li>
        <li role="presentation" {% if exam_l in request.path %} class="active" {% endif %}> <a href={% url "exam" %}> Экзамены</a></li>
+        <li role="presentation" {% if contact_admin_l in request.path %} class="active" {% endif %}> 
+        <a href={% url "contact_admin" %}> Контакт </a></li>
       </ul>
       </nav>
    </div>
   </div>
 <!-- как это работает: в строке url браузера набираем адрес localhost/ или localhost/groups, или пользователь щелкает на ссылке  <a href={% url 'home' %}> или <a href={% url "groups" %}> . Диспетчер урлов (urls.py) получает значение активированного урла, находит совпадение в паттерне урлов, мы их описали, и вызывает соответсвующую вьюшку. Вьюшка получает на входе параметры в request - в виде словаря со всякими данными, что-то делает, согласно нашей задумке и возвращает (рендерит) соответствующий шаблон.html. В этот шаблон вьюшка передает необходимые данные для отображения в шаблоне - и этот шаблон мы видим на экране в ответ на наши действия-->
 
- <div class="row" id="content-columns">
- <div class="col-md-12" id="content-column">
- {% block status_message %}
+{% block status_message %}
+{% if messages %}
+  {% for message in messages %}
+  <div class= "alert alert-{{message.tags}} marg-alert"
+                id="info-alert"> {{ message }} <span>{{request.session.student_added }}</span>
+  </div>
+  <!-- message.tags - выводит вид сообщения warning, success, error, debug, info-->
+  {% endfor %}
+{% endif %}
+{% endblock %} 
 
+{% comment закомментировали первоначальный вариант сообщений %}
  {% if request.GET.status_message %}
  <!--в этом блоке выводим сообщение о результате операуии по добавлению студента при редиректе  
  с формы добавления на 'home'-->
@@ -91,8 +102,11 @@
              это как посмотреть ключи в сессии, как данные выдернуть сразу - пока не знаю, но по ключу можно -->
  </div>
 {% endif %}
-{% endblock %}
+{%endcomment%}
 
+<div class="row" id="content-columns">
+<div class="col-md-12" id="content-column">
+ 
 <!-- заголовок перед выводом данных-->
  <div class="title-content"> <h3> {% block title %} {% endblock title %}</h3></div>
 

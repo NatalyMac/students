@@ -7,6 +7,7 @@ from ..models.students import Student
 from ..models.groups import Group
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from datetime import datetime
+from django.contrib import messages
 
 # views always  takes on the input  request (object) and always returns HTTPResponse (object) 
 # answer rendering template with context 
@@ -57,9 +58,9 @@ def students_list(request):
     return render(request, 'students/students_list.html', {'students': list_students, 'order_by_1': order_by, 'reverse_1':reverse})
     # return render(request,'students/students_list.html', {'students': list_students})
     # добавили третий аргумент - словарь с ключом  list_students = списку студентов, по этому ключу получаем доступ 
-    # к списку студентов, этот словарь - контекст шаблона, через который данные из вьюшки передаются в шаблон
+    # к списку студентов. этот словарь - контекст шаблона, через который данные из вьюшки передаются в шаблон.
     # в шаблоне по ключу students получаем доступ к списку студентов, список студентов берем из БД такой вот штукой
-    # Student.objects.all() кроме списка студентов передаем две переменные order_by_1 и reverse_1 - это начальные 
+    # Student.objects.all(). кроме списка студентов передаем две переменные order_by_1 и reverse_1 - это начальные 
     # установки для вывода данных в отсортированном виде сразу при загрузке
     # после применения пагинатора наш список студентов - это уже набор страниц, который будет выводится - 
     # сразу после загрузки - первая страница, затем по кликанью на пагинаторе - выводим тех студентов, которые 
@@ -155,9 +156,11 @@ def students_add(request):
                 request.session['student_added'] = student.last_name+' '+student.first_name
                 #request.session['student_addedFN'] = student.first_name
                 # сохраняю в словаре сессии добавленного студента
-
-                return HttpResponseRedirect(u'%s?status_message=Студент успешно добавлен!'%reverse('home'))
-            
+                messages.success(request, 'Студент успешно добавлен!')
+                # сформировали сообщение статуса, которое будет отображаться на страницу редиректа
+                # виды  success, debug, warning, info, error
+                # return HttpResponseRedirect(u'%s?status_message=Студент успешно добавлен!'%reverse('home'))
+                return HttpResponseRedirect(reverse('home'))
             else:
             # render form with errors and previous user input
                 return render(request, 'students/students_add.html',{'groups': Group.objects.all().order_by('title'),\
@@ -166,8 +169,10 @@ def students_add(request):
         elif request.POST.get('cancel_button') is not None:
         # redirect to home page on cancel button
             request.session['student_added'] = ''
+            messages.warning(request, 'Добавление студента отменено!')
             #обнуляем данные о студенте, если кансел
-            return HttpResponseRedirect(u'%s?status_message=Добавление студента отменено!'%reverse('home'))
+            #return HttpResponseRedirect(u'%s?status_message=Добавление студента отменено!'%reverse('home'))
+            return HttpResponseRedirect(reverse('home'))
     else:
     # initial form render
         return render(request, 'students/students_add.html',{'groups': Group.objects.all().order_by('title')})

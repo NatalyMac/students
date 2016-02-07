@@ -1,0 +1,5 @@
+# ignor pyc
+*.pyc
+
+# ignor DS_Store
+.DS_STORE

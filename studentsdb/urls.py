@@ -21,6 +21,7 @@ from students.views.students import students_list, students_list, students_add, 
 from students.views.groups import groups_list, groups_add,groups_edit, groups_delete
 from students.views.journal import journal_list, journal_student, journal_update
 from students.views.exams import exam_list
+from students.views.contact_admin import contact_admin
 from .settings import MEDIA_ROOT, DEBUG
 #from students import views
 urlpatterns = [
@@ -45,6 +46,8 @@ urlpatterns = [
     
     url(r'^exam/$', exam_list, name='exam'),
 
+    url(r'^contact_admin/$', contact_admin, name='contact_admin'),
+
     # админ панель 
     url(r'^admin/', include(admin.site.urls)),
 
@@ -62,18 +65,4 @@ if DEBUG:
         # чтоб все это работало поле БД для изображ должно хранить имя файла изображения, иначе исключ 
 ]
 
-#http://localhost:8000/static/
 
-"""urlpatterns = [
-    url(r'^admin/', admin.site.urls),
-]"""
-
-""" from django.conf.urls import url
-from django.contrib import admin
-import main.views
-
-urlpatterns = [
-    url(r'^admin/', admin.site.urls),
-    url(r'^$', main.views.home)
-]
-"""

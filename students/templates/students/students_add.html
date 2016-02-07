@@ -9,7 +9,7 @@
 {% block status_message %}
 <!-- выводим статусное сообщение об ошибке, перекрывая этот блок в базовом шаблоне -->
    {% if errors %}
-   <div class="alert alert-danger" role="alert">Пожалуйста, исправьте ошибки</div>
+   <div class="alert alert-danger marg-alert" role="alert">Пожалуйста, исправьте ошибки</div>
    {% endif %}
 {% endblock status_message %}
 
@@ -26,6 +26,8 @@
 
 <form class="form-horizontal" role="form" action="{% url "students_add" %}" method="post" enctype="multipart/form-data">
 {% csrf_token %}
+<!-- в action указываем урл который будет обрабатывать нашу форму - это может быть другой урл - отдельная страница, либо
+тот же самый урл, из которого происходит вызов(генерация) формы, если одна и та же вьюшка занимается генерацией  и обработкой формы-->
 
 <div class="form-group {% if errors.first_name %}has-error{% endif%}">
 <label class="control-label col-md-2" for="first_name">Имя<span class="text=uppercase">*</span></label>
