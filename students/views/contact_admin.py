@@ -74,6 +74,9 @@ def contact_admin(request):
             except Exception:
                 messages.warning(request, 'Во время отправки возникла ошибка, попробуйте позже')
             else:
+                request.session['student_added'] = '' 
+                #  редко возникающая проблема - при сообщении об успешном отправлении письма, выводится имя 
+                #  последнего добавленного студента. Нужно понаблюдать
                 messages.success(request, 'Письмо успешно отправлено!')
 
         # redirect to the same contact page with success message
