@@ -58,6 +58,7 @@
        {% url 'journal' as journal_l %}
        {% url 'exam' as exam_l %}
        {% url 'contact_admin' as contact_admin_l %}
+       {% url 'test_page' as test_page_l %}
        <!-- динамическая подстветка закладок меню, на которой фокус - та активна. Для этого нужно знать на какой закладке 
        это известно через тег url, напрямую в теге сравнения использовать нельзя, поэтому сначала вводим переменные в шаблон со значением url (имя из файла урлов) -->
      <nav>
@@ -72,6 +73,8 @@
        <li role="presentation" {% if exam_l in request.path %} class="active" {% endif %}> <a href={% url "exam" %}> Экзамены</a></li>
         <li role="presentation" {% if contact_admin_l in request.path %} class="active" {% endif %}> 
         <a href={% url "contact_admin" %}> Контакт </a></li>
+        <li role="presentation" {% if test_page_l in request.path %} class="active" {% endif %}> 
+        <a href={% url "test_page" %}> Страница для тестов </a></li>
       </ul>
       </nav>
    </div>
@@ -81,6 +84,7 @@
 {% block status_message %}
 {% if messages %}
   {% for message in messages %}
+  {{message.tags}}
   <div class= "alert alert-{{message.tags}} marg-alert"
                 id="info-alert"> {{ message }} <span>{{request.session.student_added }}</span>
   </div>
@@ -88,21 +92,6 @@
   {% endfor %}
 {% endif %}
 {% endblock %} 
-
-{% comment закомментировали первоначальный вариант сообщений %}
- {% if request.GET.status_message %}
- <!--в этом блоке выводим сообщение о результате операуии по добавлению студента при редиректе  
- с формы добавления на 'home'-->
- <div class={% if 'отменен' in request.GET.status_message%} "alert alert-warning" {% endif %}
-           {% if 'добавлен' in request.GET.status_message %} "alert alert-success" {% endif %}
-             id="info-alert">{{request.GET.status_message }} <span>{{request.session.student_added }}
-             </span>
-             <!-- через сессию получаем кого успешно добавили и выводим в статусной строке 
-             {{request.session.keys}} 
-             это как посмотреть ключи в сессии, как данные выдернуть сразу - пока не знаю, но по ключу можно -->
- </div>
-{% endif %}
-{%endcomment%}
 
 <div class="row" id="content-columns">
 <div class="col-md-12" id="content-column">

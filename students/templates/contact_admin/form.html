@@ -11,25 +11,12 @@
 
 {% block status_message %}
 <!-- выводим статусное сообщение об ошибке, перекрывая этот блок в базовом шаблоне -->
-  
-        {%comment %}
-            закомментировали, потому что можно избежать дублирования этого кода, у нас в base.html такой же кусок кода
-            вместо этого куска вставляем block.super и он из base.html из блока status_message выдернет код
-            super - указывает на родительский элемент. Т.е. блок status_message из родит. html
-            {% if messages %}
-                {% for message in messages %}
-                <div class="alert alert-{{message.tags}} marg-alert" role="alert"> {{message}} </div>
-                {% endfor %}
-            {% endif %}
-        {%endcomment %}
-
-{{ block.super }}
-  {% if form.errors %}
-    {% comment %} сообщение о неправильно введенных данных не смогла передать из вьюшки contact_admin.py, почему не поняла - сообщения об успехе работает, а это нет {%endcomment%}
-     <div class="alert alert-danger marg-alert" role="alert">
-     Пожалуйста, исправьте следующие ошибки
-     </div>
-  {% endif %}
+{{ block.super }} 
+{% if form.errors %}
+    <div class="alert alert-danger marg-alert" role="alert">
+         Пожалуйста, исправьте следующие ошибки
+    </div>
+{% endif %}
 {% endblock status_message %}
 
 {% block title %} Написать администратору {% endblock title %}

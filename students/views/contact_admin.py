@@ -70,7 +70,8 @@ def contact_admin(request):
             from_email = form.cleaned_data['from_email']
         
             try:
-                send_mail(subject, message, from_email, [ADMIN_EMAIL])
+                send_mail(subject, message, from_email)
+                #, [ADMIN_Email]
             except Exception:
                 messages.warning(request, 'Во время отправки возникла ошибка, попробуйте позже')
             else:
@@ -78,22 +79,23 @@ def contact_admin(request):
                 #  редко возникающая проблема - при сообщении об успешном отправлении письма, выводится имя 
                 #  последнего добавленного студента. Нужно понаблюдать
                 messages.success(request, 'Письмо успешно отправлено!')
+                #return HttpResponseRedirect(reverse('contact_admin'))
 
-        # redirect to the same contact page with success message
         else:
-            if form.errors:
-                form = ContactForm(form.cleaned_data)
+            #if form.errors:
+            form = ContactForm(form.cleaned_data)
                 # !!!!! Вот здесь засада, было
-                # messages.error = (request, 'Исправьте ошибки, пожалуйста')
+            messages.error = (request, 'Исправьте ошибки, пожалуйста')
                 # но не захотела работать, сделала для ошибок в form.html статич запись
                 # Почему? подобные сообщения об  успехе или временной недоступности доступны в form.html
                 # и прекрасно выводятся, а это сообщение нет
-                # 
-
-                return render(request, 'contact_admin/form.html', {'form': form})
+                # условие работает, если поставить в return другую html страницу, при ошибах перенапр
+                #return render(request, 'students/students_list.html', {}) 
+            return render(request, 'contact_admin/form.html', {'form': form})
+            #return HttpResponseRedirect(reverse('contact_admin'))
         
         return HttpResponseRedirect(reverse('contact_admin'))
-        
+        # redirect to the same contact page with success message
         
         # if there was not POST render blank form
     else:

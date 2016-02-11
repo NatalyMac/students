@@ -17,12 +17,14 @@ Including another URLconf
 """
 from django.conf.urls import patterns, include, url
 from django.contrib import admin #все запросы по адресу admin/ обрабатываются этим модулем
-from students.views.students import students_list, students_list, students_add, students_edit, students_delete 
+from students.views.students import students_list, students_list, students_add, students_delete 
 from students.views.groups import groups_list, groups_add,groups_edit, groups_delete
 from students.views.journal import journal_list, journal_student, journal_update
 from students.views.exams import exam_list
 from students.views.contact_admin import contact_admin
 from .settings import MEDIA_ROOT, DEBUG
+from students.views.students_test import StudentListTest
+from students.views.students import StudentUpdateView
 #from students import views
 urlpatterns = [
 	#students url
@@ -30,7 +32,8 @@ urlpatterns = [
     # при проверке url-паттерна 'имя домена/' не входит в проверку, поэтому все регулярные выраж. для урлов не содержат имя домена/
     # поэтому urlпаттерн = ^$ - пустая строка, соответствует запросам в корневой адрес www.имя домена/
     url(r'^students/add/$', students_add, name='students_add'),
-    url(r'^students/(?P<sid>\d+)/edit/$',students_edit, name='students_edit'), #sid идентификатор студента
+    url(r'^students/(?P<pk>\d+)/edit/$',StudentUpdateView.as_view(), name='students_edit'), #pk идентификатор студента, 
+    # должен быть или pk или slug, если используем generic view
     url(r'^students/(?P<sid>\d+)/delete/$',students_delete, name='students_delete'),
     
     #groups link
@@ -44,12 +47,16 @@ urlpatterns = [
     url(r'^journal/(?P<sid>\d+)/$', journal_student, name='journal_student'),
     url(r'^journal/update/$', journal_update, name='journal_update'),
     
+    # закладка для экзаменов
     url(r'^exam/$', exam_list, name='exam'),
 
     url(r'^contact_admin/$', contact_admin, name='contact_admin'),
 
     # админ панель 
     url(r'^admin/', include(admin.site.urls)),
+
+    # тестовый урл для примеров
+    url(r'^test_page/$', StudentListTest.as_view(), name='test_page'),
 
     #url(r'^media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': MEDIA_ROOT}),
 
