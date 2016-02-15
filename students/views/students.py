@@ -26,16 +26,25 @@ def students_list(request):
     # здесь мы получаем все объекты модели, все строки таблицы БД, так называемый Queryset
     
     # try to order students list
-    #reverse = ''
+    order_by_default = '0'
+    # инициализация переменной, и дальше не мешает
     order_by = request.GET.get('order_by', '')
+    # второй параметр передача значения по умолчанию, но нас такая передача не устраивает, 
+    # теряем значение по умолчанию для корректного изображения в шаблоне
     if order_by =='':
         order_by = 'last_name'
+        order_by_default = '1'
+        
     # получаем в GET запросе параметр order_by, когда пользователь щелкнет по ссылке 
     #  <a href={% url "home" %}?order_by=last_name>Фамилия&uarr;</a> 
     # GET вернет нам в order_by - last_name or first_name or ticket
     # параметр запроса сразу за знаком ?
     # если пользователь не щелкал по ссылке, то order_by - пустой, и мы присваиваем ему значение 'last_name'
-    # это мы устанавливаем сотрировку вывода по умолчанию по этому полю
+    # это мы устанавливаем сортировку вывода по умолчанию по этому полю и ввводим переменную, которая помнит
+    # режим по умолчанию, пока пользователь не щелкнет ссылку
+    # перем по умолч нужна, чтобы нарисовать стрелочку и исключить двой вывод сортировку по возрастанию
+    # если не сделать, то таблица выводится сортированная по возрастанию, но щелчок по ссылке приводит 
+    # не к изменению направления сортировки, а к повторному выводу сортировки по возрас
     
     if order_by in ('last_name', 'first_name', 'ticket'):
         # если щелкнули имя, фамилия или билет
@@ -63,7 +72,8 @@ def students_list(request):
         list_students = paginator.page(paginator.num_pages)
         # если выичислили но больше чем у нас есть, показываем последнюю
     
-    return render(request, 'students/students_list.html', {'students': list_students, 'order_by_1': order_by, 'reverse_1':reverse})
+    return render(request, 'students/students_list.html', {'students': list_students, 'order_by_default':order_by_default})
+    # 'reverse_1':reverse
     # return render(request,'students/students_list.html', {'students': list_students})
     # добавили третий аргумент - словарь с ключом  list_students = списку студентов, по этому ключу получаем доступ 
     # к списку студентов. этот словарь - контекст шаблона, через который данные из вьюшки передаются в шаблон.
