@@ -137,11 +137,11 @@ SITE_ID = 1
 
 # email settings
 # please, set here you smtp server details and your admin email
-ADMIN_EMAIL = 'NatalyDjango@gmail.com'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = '465'
-EMAIL_HOST_USER = 'NatalyDjango@gmail.com'
-EMAIL_HOST_PASSWORD = 'DjangoDjango'
+ADMIN_EMAIL = '****'
+EMAIL_HOST = '*****'
+EMAIL_PORT = '*'
+EMAIL_HOST_USER = '***'
+EMAIL_HOST_PASSWORD = '*****'
 EMAIL_USE_TLS = False
 EMAIL_USE_SSL = True
 
