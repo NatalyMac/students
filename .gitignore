@@ -4,6 +4,7 @@ studentsdb/studentsdb/settings.py
 =======
 # ignor pyc
 *.pyc
+studentsdb/studentsdb/settings.py
 
 # ignor DS_Store
 .DS_Store
