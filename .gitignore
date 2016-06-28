@@ -1,2 +1,10 @@
+<<<<<<< HEAD
 *.pyc
 studentsdb/studentsdb/settings.py
+=======
+# ignor pyc
+*.pyc
+
+# ignor DS_Store
+.DS_Store
+>>>>>>> d2e3f91211799d403e3820345273a7121e4549cd
