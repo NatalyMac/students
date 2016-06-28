@@ -1,0 +1,137 @@
+{% extends "students/base.html" %} 
+<!-- наследуем от базового шаблона -->
+
+{% load static from staticfiles %}
+<!-- загружаем тег для указания урла  для статичных ресурсов -->
+
+{% block meta_title %} Добавление студента {% endblock meta_title %}
+
+{% block status_message %}
+<!-- выводим статусное сообщение об ошибке, перекрывая этот блок в базовом шаблоне -->
+   {% if errors %}
+   <div class="alert alert-danger marg-alert" role="alert">Пожалуйста, исправьте ошибки</div>
+   {% endif %}
+{% endblock status_message %}
+
+{% block title %} Форма добавления студента {% endblock title %}
+
+{% block logo %} <h2> <a href="#">Сервис учета студентов - Добавление студента</a></h2> {% endblock logo%}
+<!--играемся - меняем лого из дочерних файлов-->
+
+
+{% block content %}
+
+<div class="container input-center">
+<div class="row"></div>
+
+<form class="form-horizontal" role="form" action="{% url "students_add" %}" method="post" enctype="multipart/form-data">
+{% csrf_token %}
+<!-- в action указываем урл который будет обрабатывать нашу форму - это может быть другой урл - отдельная страница, либо
+тот же самый урл, из которого происходит вызов(генерация) формы, если одна и та же вьюшка занимается генерацией  и обработкой формы-->
+
+<div class="form-group {% if errors.first_name %}has-error{% endif%}">
+<label class="control-label col-md-2" for="first_name">Имя<span class="text=uppercase">*</span></label>
+<div class="col-md-10">
+  <input tabindex="1" type="text" class="form-control" id="first_name" value="{{request.POST.first_name}}" name="first_name" placeholder="Имя">
+  <!-- Подоба предлагает помнить при неудачной отправке формы введенные пользователем данные
+  через value="{{ request.POST.first_name }}" почему не  data из вьюшки? 
+  а потому что в date не все данные, а только те что прошли валидацию, др не отображается по этой схеме 
+  почему не знаю еще-->
+  <span class="help-block">{{ errors.first_name }}</span>
+</div>
+</div>
+
+<div class="form-group {% if errors.middle_name %}has-error{% endif%}">
+<!-- class has_error вводим если по полю ошибки, применим для дополнительной стилизации или обработки -->
+<label class="control-label col-md-2" for="middle_name">Отчество</label>
+<div class="col-md-10">
+  <input tabindex="2" type="text" class="form-control" id="middle_name" value="{{request.POST.middle_name}}" name="middle_name" placeholder="Отчество">  
+</div>
+</div>
+
+<div class="form-group {% if errors.last_name %}has-error{% endif%}">
+<label class="control-label col-md-2" for="last_name">Фамилия<span class="text=uppercase">*</span></label>
+<div class="col-md-10">
+  <input tabindex="3" type="text" class="form-control" id="last_name" value="{{request.POST.last_name}}" placeholder="Фамилия" name="last_name"> 
+  <span class="help-block">{{ errors.last_name }}</span> 
+</div>
+</div>
+
+<div class="form-group {% if errors.ticket %}has-error{% endif%}">
+<label class="control-label col-md-2" for="ticket">№ билета<span class="text=uppercase">*</span></label>
+<div class="col-md-10">
+  <input tabindex="4" type="text" class="form-control" id="ticket" name="ticket" value="{{request.POST.ticket}}" placeholder="Номер студенческого билета">  
+  <span class="help-block">{{ errors.ticket }}</span>
+</div>
+</div>
+
+<div class="form-group {% if errors.birthday %}has-error{% endif%}">
+<label class="control-label col-md-2" for="birthday">Дата рождения<span class="text=uppercase">*</span></label>
+<div class="col-md-10">
+  <input tabindex="5" type="text" class="form-control" id="birthday" name="birthday" 
+  placeholder="Введите в формате ГГГГ-ММ-ДД" value="{{ request.POST.birthday }}" pattern="[0-9]{4}-[0-9{2}-[0-9]{2}">  
+  <span class="help-block">{{ errors.birthday }}</span>
+</div>
+</div>
+<!-- лишнее?
+<div class="form-group form-inline">
+<label class="control-label col-md-2" for="photois">Загруженное фото</label>
+<div class="col-md-10">
+  <a tabindex="6" class="form-control" id="photois" href="#">Имя файла фото</a>  
+  <a tabindex="7" type="text" class="btn btn-warning mywidth">Очистить</a>
+</div>
+</div>
+-->
+<div class="form-group">
+<label class="control-label col-md-2" for="photo">Добавить фото</label>
+<div class="col-md-10">
+  <input tabindex="8" type="file" class="form-control" id="photo" name="photo" > 
+</div>
+</div>
+
+<div class="form-group {% if errors.first_name %}has-error{% endif %}">
+<label class="control-label col-md-2" for="student_group">Группа<span class="text=uppercase">*</span></label>
+<div class="col-md-10">
+  <select tabindex="10" class="form-control" id="student_group" name="student_group">
+  <option value="{{request.POST.student_group}}">Выберите группу</option>
+  
+  {% for group in groups%}
+        <option value="{{ group.id }}" {% if group.id == request.POST.student_group|add:0 %}selected="1"{% endif %}>
+        {{ group.title }}</option> 
+  {% endfor %}
+  
+  <!-- request.POST.student_group|add:0 этой штукой из строки юникода делаем целое -->
+  </select>
+  <span class="help-block">{{ errors.student_group }}</span>
+</div>
+</div>
+
+<div class="form-group {% if errors.notes %}has-error{% endif%}">
+<label class="control-label col-md-2" for="notes">Примечания</label>
+<div class="col-md-10">
+  <textarea tabindex="11" class="form-control" id="notes" name="notes" rows="5" placeholder="Введите примечания">
+            {{request.POST.notes}}</textarea>
+            <!-- у него нет атрибута volume, где храниь предыд значение? Храним просто в поле textarea-->
+</div>
+</div>
+
+<div class="form-group form-inline"> 
+<label class="control-label col-md-2"></label>
+    <div class="col-md-10">
+      <input  type="submit" class="btn btn-primary" value="Отправить" name="add_button"/>
+      <!-- також відправити дані на сервер
+      можна натиснувши кнопку “Enter” маючи сфокусованим одне із полів
+      форми; при цьому буде автоматично запущена перша кнопка на формі ?????  didn't return an HttpResponse object. It returned None instead.
+      если правильно поняла желательно чтобы submit был один на форму-->
+      <button type="submit" class="btn btn-warning" name="cancel_button">Отменить</button>
+    </div>
+  </div>
+
+</form>
+    
+</div><!--container-->
+{% endblock content %}
+
+{% block footer %} Добавление студента {% endblock footer %}
+
+

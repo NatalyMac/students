@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title> Network Community </title>
+<meta name="description" value="Конференции"/>
+<meta charset="utf-8"/>    
+</head>
+
+<body>     
+<h3> Конференции и общение</h3>
+
+{%if user.is_authenticated%}
+{% block content %} {% endblock content %} 
+
+<span> {{user.name}}</span>
+<a href = {% url "users:auth_logout" %}> Выйти</a>
+
+{%else%}
+
+<a href = {% url "accounts:auth_login" %}> Войти</a>
+<a href = {% url "accounts:registration_register" %}> Зарегистрироваться</a>
+
+{%endif%}
+</body>
+</html> 

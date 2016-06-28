@@ -1,0 +1,122 @@
+{% load static from staticfiles %}
+<!-- загружаем тег для указания урла  для статичных ресурсов -->
+<!DOCTYPE html>
+<html>
+<head>
+<title>Система учета студентов {% block meta_title %}{% endblock meta_title %}</title>
+<meta name="description" value="Система учета студентов ВУЗа"/>
+<meta charset="utf-8"/>
+<!--<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">-->
+<link rel="stylesheet" href= {{PORTAL_URL}}{% static "bootstrap/css/bootstrap.min.css" %}>
+<link rel="stylesheet" href= {{PORTAL_URL}}{% static "css/main.css" %}>
+{% block extra_css %}{% endblock extra_css %}
+</head>
+
+<body>
+<div class="container">
+  <div class="row" id="header"> 
+ <!-- в этом классе задаем строчку страницы, в которой будет заголовок-ссылка (лого текстовое), форма выбора группы студентов, строка поделена на колонки согласно грида - 8 колонок заголовок, 4 - форма выбора. Форма выбора сделана как горизонтальная, вопрос - такой вид формы требует указания размеров для лейбл и размера селекта, поигралась пришла к выводу, что размерчики этой формы надо рассматривать как полный грид, т.е. из размерности 12-->
+    
+    <!--лого-->
+    <div class="col-md-8">
+      {% block logo %} <h2> <a href="#">Сервис учета студентов</a></h2> {% endblock logo%}
+
+      <p>URL full path of this page: {{ request.get_full_path }}</p>
+      <p>URL of this host: {{ request.get_host }}</p>
+      <p>PORTAL URL: {{ PORTAL_URL }}</p>
+      <p>URL of this page path: {{ request.path }}</p>
+      <p>Absolute URI of this page: {{ request.build_absolute_uri}}</p>
+      <p> Method {{request.method}}</p>
+      <p> GET Dict{{request.GET}}</p>
+      <p> Post Dict{{request.POST}}</p>
+      <p> session {{request.session.keys}}</p>
+
+    </div>
+    
+    <!-- селектор групп-->
+    <div class="col-md-4" id="group-selector">
+      <form class="form-horizontal" role="form">
+        <div class="form-group">
+          <label class="control-label col-sm-2 text-primary" for="sel1">Группа</label>
+          <div class="col-md-10">
+            <select class="form-control" id="sel1">
+              <option value="">Все студенты</option> 
+              <option value="">МтМ - 21, Подоба Віталій (№ 254)</option>
+              <option value="">МтМ - 22, Корост Андрій (№ 2123)</option>
+            </select>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+ <!-- закончили с первой строкой страницы лого и селектор групп-->
+ <!--меню навигации с кнопками табов-->
+ 
+  <div class="row" id="sub-header">
+   <div class="col-md-12"> 
+       {% url 'groups' as groups_l %} 
+       {% url 'journal' as journal_l %}
+       {% url 'exam' as exam_l %}
+       {% url 'contact_admin' as contact_admin_l %}
+       {% url 'test_page' as test_page_l %}
+       <!-- динамическая подстветка закладок меню, на которой фокус - та активна. Для этого нужно знать на какой закладке 
+       это известно через тег url, напрямую в теге сравнения использовать нельзя, поэтому сначала вводим переменные в шаблон со значением url (имя из файла урлов) -->
+     <nav>
+       <ul class="nav nav-tabs" role="tablist">
+        
+       <li role="presentation" class= {% block active_home %}{% endblock active_home %}> <a href={% url 'home' %}> Студенты </a></li> 
+       <!-- подсвечиваем активную закладку,используя наследование и теги блоков. В базовом вводим блок для class='active',
+       а в дочернем этот блок описываем. Если будет активным дочерний шаблон он перекроет этот блок и установит 
+       class='active'. Метод прикольный, но сложный при больших объемах -->
+       <li role="presentation" {% if journal_l in request.path %} class="active" {% endif %}> <a href={% url "journal" %}> Посещения</a></li>
+       <li role="presentation" {% if groups_l in request.path %} class="active" {% endif %}> <a href={% url "groups" %}> Группы </a></li>
+       <li role="presentation" {% if exam_l in request.path %} class="active" {% endif %}> <a href={% url "exam" %}> Экзамены</a></li>
+        <li role="presentation" {% if contact_admin_l in request.path %} class="active" {% endif %}> 
+        <a href={% url "contact_admin" %}> Контакт </a></li>
+        <li role="presentation" {% if test_page_l in request.path %} class="active" {% endif %}> 
+        <a href={% url "test_page" %}> Страница для тестов </a></li>
+      </ul>
+      </nav>
+   </div>
+  </div>
+<!-- как это работает: в строке url браузера набираем адрес localhost/ или localhost/groups, или пользователь щелкает на ссылке  <a href={% url 'home' %}> или <a href={% url "groups" %}> . Диспетчер урлов (urls.py) получает значение активированного урла, находит совпадение в паттерне урлов, мы их описали, и вызывает соответсвующую вьюшку. Вьюшка получает на входе параметры в request - в виде словаря со всякими данными, что-то делает, согласно нашей задумке и возвращает (рендерит) соответствующий шаблон.html. В этот шаблон вьюшка передает необходимые данные для отображения в шаблоне - и этот шаблон мы видим на экране в ответ на наши действия-->
+
+{% block status_message %}
+{% if messages %}
+  {% for message in messages %}
+  {{message.tags}}
+  <div class= "alert alert-{{message.tags}} marg-alert"
+                id="info-alert"> {{ message }} <span>{{request.session.student_added }}</span>
+  </div>
+  <!-- message.tags - выводит вид сообщения warning, success, error, debug, info-->
+  {% endfor %}
+{% endif %}
+{% endblock %} 
+
+<div class="row" id="content-columns">
+<div class="col-md-12" id="content-column">
+ 
+<!-- заголовок перед выводом данных-->
+ <div class="title-content"> <h3> {% block title %} {% endblock title %}</h3></div>
+
+<!-- здесь блок контента, дочерний шаблон будет заполнять этот блок-->  
+{% block content %} {% endblock content %}  
+</div>
+</div>
+
+<div class="row" id="foot">
+<div class="col-md-12">
+<footer class="well well-sm">
+<p>&copy;Система учета студентов 2015 <span class="badge pull-right">{% block footer %}{% endblock footer %}</span></p>
+</footer>
+</div>
+</div><!--footer-->
+
+</div><!--container-->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+<!--<script src={{PORTAL_URL}}{% static "bootstrap/js/bootstrap.min.js" %}> -->
+
+{% block extra_js %}{% endblock extra_js %}
+</body>
+</html>

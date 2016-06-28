@@ -1,0 +1,67 @@
+
+{% extends "students/base.html" %} 
+<!-- наследуем от базового шаблона -->
+{% load static from staticfiles %}
+<!-- загружаем тег для указания урла  для статичных ресурсов -->
+{% block meta_title %} Экзамены {% endblock meta_title %}
+{% block logo %} <h2> <a href="#">Сервис учета студентов - Экзамены</a></h2> {% endblock logo%}
+<!--играемся - меняем лого из дочерних файлов-->
+{% block title %} Группа {% endblock title %}
+
+
+{% block content %}
+
+
+    <!--<div class="add-student"><a class="btn btn-primary btn-md" href={% url 'groups_add' %} >Добавить группу</a></div>-->
+    
+{% if exams %}
+    <table class="table table-hover table-striped">
+    <!--{% with order_by=request.GET.order_by reverse=request.GET.reverse page=request.GET.page %}-->
+
+    <thead>
+    <tr>
+    <th><a href="">№п/п</a></th>
+    <th><a href="">Название экзамена</a></th>
+    <th><a href="">Преподаватель</a></th>
+    <th><a href="">Дата экзамена</a></th>
+    <th><a href=""> Группа</a></th>
+    </tr>
+    </thead>
+
+    <!--{% endwith %}-->
+
+    {% for exam in exams %}
+    <tbody>
+      <tr>
+      <td>{{ forloop.counter }}</td>
+      <td><a title="" href="#"> {{ exam.exam_name }}</a></td>
+      <td><a title="" href="#"> {{ exam.teach_name }}</a></td>
+      <td><a title="" href="#"> {{ exam.exam_date }}</a></td>
+      {% for group in exam.exam_group.all%}
+      <!-- здесь в цикле выводим группы для экзамена, у нас в поле exam.group хранится еще табличка или список с перечнем групп, чтобы к нему добраться берем exam.exam_group.all, где all делаем нам из этого поля итерируемую величину, и мы
+      можем уже перебирать и выводить содержимое, без этого выводятся только объекты, вывод пока не очень красивый, но не принципиально -->
+      <tr>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td><a title="" href="#"> {{ group }}</a></td>
+      </tr>
+      {% endfor %}
+      
+
+   {% endfor %}
+    
+   
+   
+   </tbody>
+ </table>
+ {% else %}
+ <p> нет данных</p>
+ {% endif %}
+
+ 
+{% endblock content %}
+
+{% block footer %} Экзамены {% endblock footer %}
+<!--играемся - добавляем в футер название страницы-->

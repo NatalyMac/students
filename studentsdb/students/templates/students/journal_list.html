@@ -1,0 +1,177 @@
+{% extends "students/base.html" %} 
+<!-- наследуем от базового шаблона -->
+{% load static from staticfiles %}
+<!-- загружаем тег для указания урла  для статичных ресурсов -->
+{% block meta_title %} Журнал {% endblock meta_title %}
+{% block logo %} <h2> <a href="#">Сервис учета студентов - Посещения</a></h2> {% endblock logo%}
+<!--играемся - меняем лого из дочерних файлов-->
+
+{% block title %} Учет посещений {% endblock title %}
+
+
+{% block content %}
+<div>
+<div class="text-center">
+<ul class='pager'>
+<li><a href="#"> <span class="glyphicon glyphicon-arrow-left month"></span></a></li>
+<li><span class="month">Январь</span></li>
+<li><a href="#"> <span class="glyphicon glyphicon-arrow-right month"></span></a></li>
+</ul>
+</div>
+	
+<div>
+<table class="table table-hover table-striped visit-table table-condensed">
+  <thead>
+  <tr>
+    <th>№ п/п</th>
+    <th>Студент</th>
+    <th>Ср 1</th>
+    <th>ЧТ 2</th>
+    <th>Пт 3</th>
+    <th>Сб 4</th>
+    <th>Вс 5</th>
+    <th>Пн 6</th>
+    <th>Вт 7</th>
+    <th>Ср 8</th>
+    <th>Чт 9</th>
+    <th>Пт 10</th>
+    <th>Сб 11</th>
+    <th>Вс 12</th>
+    <th>Пн 13</th>
+    <th>Вт 14</th>
+    <th>Ср 15</th>
+    <th>Чт 16</th>
+    <th>Пт 17</th>
+    <th>Сб 18</th>
+    <th>Вс 19</th>
+    <th>Пн 20</th>
+    <th>Вт 21</th>
+    <th>Ср 22</th>
+    <th>Чт 23</th>
+    <th>Пт 24</th>
+    <th>Сб 25</th>
+    <th>Вс 26</th>
+    <th>Пн 27</th>
+    <th>Вт 28</th>
+    <th>Ср 29</th>
+    <th>Чт 30</th>
+    <th>Пт 31</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+    <td>1</td>
+    <td><a href="">Куличик Наталья</a></td>
+    <td><input type="checkbox" value=""></td>
+    <td><input type="checkbox" value=""></td>
+    <td><input type="checkbox" value=""></td>
+    <td><input type="checkbox" value=""></td>
+    <td><input type="checkbox" value=""></td>
+    <td><input type="checkbox" value=""></td>
+    <td><input type="checkbox" value=""></td>
+    <td><input type="checkbox" value=""></td>
+    <td><input type="checkbox" value=""></td>
+    <td><input type="checkbox" value=""></td>
+    <td><input type="checkbox" value=""></td>
+    <td><input type="checkbox" value=""></td>
+    <td><input type="checkbox" value=""></td>
+    <td><input type="checkbox" value=""></td>
+    <td><input type="checkbox" value=""></td>
+    <td><input type="checkbox" value=""></td>
+    <td><input type="checkbox" value=""></td>
+    <td><input type="checkbox" value=""></td>
+    <td><input type="checkbox" value=""></td>
+    <td><input type="checkbox" value=""></td>
+    <td><input type="checkbox" value=""></td>
+    <td><input type="checkbox" value=""></td>
+    <td><input type="checkbox" value=""></td>
+    <td><input type="checkbox" value=""></td>
+    <td><input type="checkbox" value=""></td>
+    <td><input type="checkbox" value=""></td>
+    <td><input type="checkbox" value=""></td>
+    <td><input type="checkbox" value=""></td>
+    <td><input type="checkbox" value=""></td>
+    <td><input type="checkbox" value=""></td>
+    <td><input type="checkbox" value=""></td>
+</tr>  
+<tr>
+    <td>2</td>
+    <td><a href="">Володина Марина</a></td>
+    <td><input type="checkbox" value=""></td>
+    <td><input type="checkbox" value=""></td>
+    <td><input type="checkbox" value=""></td>
+    <td><input type="checkbox" value=""></td>
+    <td><input type="checkbox" value=""></td>
+    <td><input type="checkbox" value=""></td>
+    <td><input type="checkbox" value=""></td>
+    <td><input type="checkbox" value=""></td>
+    <td><input type="checkbox" value=""></td>
+    <td><input type="checkbox" value=""></td>
+    <td><input type="checkbox" value=""></td>
+    <td><input type="checkbox" value=""></td>
+    <td><input type="checkbox" value=""></td>
+    <td><input type="checkbox" value=""></td>
+    <td><input type="checkbox" value=""></td>
+    <td><input type="checkbox" value=""></td>
+    <td><input type="checkbox" value=""></td>
+    <td><input type="checkbox" value=""></td>
+    <td><input type="checkbox" value=""></td>
+    <td><input type="checkbox" value=""></td>
+    <td><input type="checkbox" value=""></td>
+    <td><input type="checkbox" value=""></td>
+    <td><input type="checkbox" value=""></td>
+    <td><input type="checkbox" value=""></td>
+    <td><input type="checkbox" value=""></td>
+    <td><input type="checkbox" value=""></td>
+    <td><input type="checkbox" value=""></td>
+    <td><input type="checkbox" value=""></td>
+    <td><input type="checkbox" value=""></td>
+    <td><input type="checkbox" value=""></td>
+    <td><input type="checkbox" value=""></td>
+</tr>    
+<tr>
+    <td>3</td>
+    <td><a href="">Мещанина Татьяна</a></td>
+    <td><input type="checkbox" value=""></td>
+    <td><input type="checkbox" value=""></td>
+    <td><input type="checkbox" value=""></td>
+    <td><input type="checkbox" value=""></td>
+    <td><input type="checkbox" value=""></td>
+    <td><input type="checkbox" value=""></td>
+    <td><input type="checkbox" value=""></td>
+    <td><input type="checkbox" value=""></td>
+    <td><input type="checkbox" value=""></td>
+    <td><input type="checkbox" value=""></td>
+    <td><input type="checkbox" value=""></td>
+    <td><input type="checkbox" value=""></td>
+    <td><input type="checkbox" value=""></td>
+    <td><input type="checkbox" value=""></td>
+    <td><input type="checkbox" value=""></td>
+    <td><input type="checkbox" value=""></td>
+    <td><input type="checkbox" value=""></td>
+    <td><input type="checkbox" value=""></td>
+    <td><input type="checkbox" value=""></td>
+    <td><input type="checkbox" value=""></td>
+    <td><input type="checkbox" value=""></td>
+    <td><input type="checkbox" value=""></td>
+    <td><input type="checkbox" value=""></td>
+    <td><input type="checkbox" value=""></td>
+    <td><input type="checkbox" value=""></td>
+    <td><input type="checkbox" value=""></td>
+    <td><input type="checkbox" value=""></td>
+    <td><input type="checkbox" value=""></td>
+    <td><input type="checkbox" value=""></td>
+    <td><input type="checkbox" value=""></td>
+    <td><input type="checkbox" value=""></td>
+</tr>  
+</tbody>
+</table>
+</div>
+
+{% include 'students/pages.html' %}
+<!-- включаем файл с пагинатором pages.html-->
+
+{% endblock content %}
+
+{% block footer %} Посещения {% endblock footer %}
+<!--играемся - добавляем в футер название страницы-->
